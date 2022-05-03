@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { RadioBrowserApi } from "radio-browser-api"
+import { RadioBrowserApi } from 'radio-browser-api'
 import AudioPlayer from "react-h5-audio-player"
 import 'react-h5-audio-player/src/styles.scss'
 import defaultImage from "./radio.png"
@@ -20,7 +20,7 @@ export default function Radio() {
 
     const stations = await api
       .searchStations({
-        language: "english",
+        language: 'english',
         tag: stationFilter,
         limit: 30,
       })

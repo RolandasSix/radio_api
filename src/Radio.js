@@ -7,30 +7,31 @@ import defaultImage from "./radio.png"
 export default function Radio() {
   const [stations, setStations] = useState()
   const [stationFilter, setStationFilter] = useState("all")
-
+  const [radioLanguage, setRadioLanguage] = useState("english");
+  // When the station filter or radioLanguage changes, useEffect is called to call the setupApi with the selected station filter and radio language. The data is set into the setStations state hook.
   useEffect(() => {
-    setupApi(stationFilter).then(data => {
-      console.log(data)
-      setStations(data)
-    })
-  }, [stationFilter])
+    setupApi(stationFilter, radioLanguage).then(data => {
+      setStations(data);
+    });
+  }, [stationFilter, radioLanguage]);
+  //Async function used to fetch and return the correct radio stations on the app
+  // based upon user input of stationFilter and radioLanguage.
+  const setupApi = async (stationFilter, radioLanguage) => {
+  const api = new RadioBrowserApi(fetch.bind(window), "My Radio App");
+   // Querying the API by language and tag(genre/stationFilter)
+   const stations = await api
+   .searchStations({
+     language: radioLanguage,
+     tag: stationFilter,
+     limit: 30,
+   })
+   .then((data) => {
+     return data;
+   });
 
-  const setupApi = async stationFilter => {
-    const api = new RadioBrowserApi(fetch.bind(window), "My Radio App")
-
-    const stations = await api
-      .searchStations({
-        language: 'english',
-        tag: stationFilter,
-        limit: 30,
-      })
-      .then(data => {
-        return data
-      })
-
-    return stations
-  }
-
+ return stations;
+ };
+  //Array of music genres a user can pick from.
   const filters = [
     "all",
     "classical",
@@ -45,12 +46,24 @@ export default function Radio() {
     "rock",
   ]
 
-  const setDefaultSrc = event => {
-    event.target.src = defaultImage
-  }
+  // Function used for setting the station image to a default image. This function is
+  // called when onError is detected because some radio stations may not have an image.
+  const setDefaultSrc = (event) => {
+    event.target.src = defaultImage;
+  };
 
   return (
     <div className="radio">
+       {/* 'languageInput' input element receives a string input for language and sets the language via the setRadioLanguage(e.target.value) hook. */}
+       <input
+        type='string'
+        className='languageInput'
+        placeholder='Enter a language'
+        onChange={(e) => {
+          setRadioLanguage(e.target.value);
+        }}
+      />
+      {/* 'Filters' div creates a span for each filter via the map() method. The span has an onClick attribute with a function, setting the filter via the setStationFilter(filter) hook. */}
       <div className="filters">
         {filters.map((filter, index) => (
           <span
@@ -61,7 +74,11 @@ export default function Radio() {
             {filter}
           </span>
         ))}
+        
       </div>
+
+      {/* 'Stations' div generates a div for each station that contains station name, station img, 
+      and an audio player component via the map() method.  */}
       <div className="stations">
         {stations &&
           stations.map((station, index) => {
@@ -75,8 +92,9 @@ export default function Radio() {
                     onError={setDefaultSrc}
                   />
                   <div className="name">{station.name}</div>
+                
                 </div>
-
+                {/* (AudioPlayer) React H5 Audio Player was used because it's a customizable audio player component that provides consistent UI/UX on diff browsers that is mobile friendly. */}
                 <AudioPlayer
                   className="player"
                   src={station.urlResolved}
@@ -87,9 +105,9 @@ export default function Radio() {
                   autoPlayAfterSrcChange={false}
                 />
               </div>
-            )
+            );
           })}
       </div>
     </div>
-  )
+  );
 }

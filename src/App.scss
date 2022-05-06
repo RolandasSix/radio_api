@@ -21,10 +21,30 @@ h2 {
   margin-bottom: 2em;
   font-size: 2rem;
 }
-
 .radio {
   max-width: 60em;
-  width: 100%;
+  width: 90%;
+  
+  .languageInput {
+    height: 2rem;
+    width: 20rem;
+    font-size: 1.2rem;
+    text-align: center;
+    background-color: rgb(76 62 95);
+    color: white;
+    border: 1px solid gray;
+    border-radius: 0.25rem;
+    display: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 1rem 2rem 1rem;
+
+    &:focus {
+      outline: none !important;
+      border-color: #f5eef2;
+      box-shadow: 0 0 0.5rem gray;
+    }
+  }
 }
 .filters {
   display: flex;

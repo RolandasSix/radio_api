@@ -49,10 +49,10 @@ export class RadioBrowserApi {
 
     // temporary fix for https cert error when in frontend
     // hardcode the server
-    'https://github.com/segler-alex/radiobrowser-api-rust/issues/122'
-    if (typeof window !== 'undefined') {
-    return [{ ip: '45.77.62.161', name: 'fr1.api.radio-browser.info' }]
-    }
+    // https://github.com/segler-alex/radiobrowser-api-rust/issues/122
+       if (typeof window !== 'undefined') {
+       return [{ ip: '45.77.62.161', name: 'fr1.api.radio-browser.info' }]
+       }
     const response = await fetch(
       // this should be https when the above issue is resolved
       'https://all.api.radio-browser.info/json/servers',
@@ -537,21 +537,25 @@ export class RadioBrowserApi {
     let result = ''
     if (params) {
       for (const [key, value] of Object.entries(params)) {
-        let finalKey = key
+        let finalKey = key.toLowerCase()
 
         switch (finalKey) {
-          case 'hasGeoInfo':
+          case 'hasgeoinfo':
             finalKey = 'has_geo_info'
             break
-          case 'hideBroken':
+          case 'hidebroken':
             finalKey = 'hidebroken'
             break
+
+          case 'taglist':
+            // github.com/segler-alex/radiobrowser-api-rust/issues/80
+            finalKey = 'tagList' // tagList is the only one that is not lowercased
         }
 
         result += `&${finalKey}=${encodeURIComponent(value)}`
       }
     }
 
-    return result ? `?${result.slice(1)}` : ''
+    return result.length ? `?${result.slice(1)}` : ''
   }
 }

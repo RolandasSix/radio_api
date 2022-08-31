@@ -19,12 +19,14 @@ export default function Radio() {
   const setupApi = async (stationFilter, radioLanguage) => {
   const api = new RadioBrowserApi(fetch.bind(window), "My Radio App");
    // Querying the API by language and tag(genre/stationFilter)
-   const stations = await api
-   .searchStations({
-     language: radioLanguage,
+   const stations = await api.searchStations
+   ({
+     language: "english",
+     countryCode: 'us',
      tag: stationFilter,
      limit: 30,
    })
+
    .then((data) => {
      return data;
    });

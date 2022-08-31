@@ -23,7 +23,7 @@ export default function Radio() {
    // Querying the API by language and tag(genre/stationFilter)
    const stations = await api.searchStations
    ({
-     language: "english",
+     language: "eng",
      countryCode: 'us',
      tag: stationFilter,
      limit: 30,
